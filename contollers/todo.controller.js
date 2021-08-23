@@ -2,13 +2,13 @@ const db = require("../models")
 const Todo = db.todos
 
 exports.create = (req, res) => {
-    if (!req.body.title) {
-        res.status(400).send("Content cant be empty")
+    if (!req.body.value) {
+        res.status(400).send(`Content cant be empty ${req.body}`)
         return
     }
 
     const todo = new Todo({
-        title: req.body.title
+        value: req.body.value
     })
 
     todo
@@ -25,8 +25,8 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-    const title = req.query.title
-    let condition = title ? {title: {$regex: new RegExp(title), $options: "i"}} : {};
+    const value = req.query.value
+    let condition = value ? {value: {$regex: new RegExp(value), $options: "i"}} : {};
     Todo.find(condition)
         .then(data => {
             res.send(data)
@@ -65,7 +65,7 @@ exports.update = (req, res) => {
 
         todo.save((err, data) => {
             if (data) {
-                return res.send({message: `Todo was updated successfully now '${todo.title}': ${todo.isDone}`})
+                return res.send({message: `Todo was updated successfully now '${todo.value}': ${todo.isDone}`})
             }
             res.status(500).send({message: `Error retrieving Todo with id=${id}`})
         })

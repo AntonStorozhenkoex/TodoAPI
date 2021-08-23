@@ -1,9 +1,7 @@
 module.exports = mongoose => {
-    const Todo = mongoose.model(
-        "todo",
-        mongoose.Schema(
+    let schema = mongoose.Schema(
             {
-                title: String,
+                value: String,
                 isDone: {
                     type: Boolean,
                     default: false
@@ -11,6 +9,13 @@ module.exports = mongoose => {
             },
             {timestamp: true}
         )
-    )
-    return Todo
-}
+
+    schema.method("toJSON", function() {
+        const { __v, _id, ...object } = this.toObject();
+        object.id = _id;
+        return object;
+    });
+
+    const Todo = mongoose.model("todo", schema);
+    return Todo;
+};
